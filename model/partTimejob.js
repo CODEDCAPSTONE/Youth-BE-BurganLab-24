@@ -1,8 +1,10 @@
 const { model, Schema } = require("mongoose");
 const exp = require("constants");
+const { type } = require("os");
 
 const ParttimeSchema = new Schema({
-  informtion: { type: String, required: true },
+  titleJob: { type: String, required: true },
+  description: { type: String },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

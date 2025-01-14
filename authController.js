@@ -1,13 +1,13 @@
 // controllers/authController.js
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
-const OTP = require("../models/otpModel");
+const User = require("./model/user");
+const OTP = require("./model/otp");
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password, role, otp } = req.body;
+    const { username, email, password, role, otp } = req.body;
     // Check if all details are provided
-    if (!name || !email || !password || !otp) {
+    if (!username || !email || !password || !otp) {
       return res.status(403).json({
         success: false,
         message: "All fields are required",
@@ -40,7 +40,7 @@ exports.signup = async (req, res) => {
       });
     }
     const newUser = await User.create({
-      name,
+      username,
       email,
       password: hashedPassword,
       role,

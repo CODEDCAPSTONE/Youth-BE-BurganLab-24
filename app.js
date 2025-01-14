@@ -8,6 +8,7 @@ const { NotFoundError } = require("./errors");
 const { authRouter } = require("./auth");
 const { cardsRouter } = require("./routes");
 const { cardPaymentRouter } = require("./routes/payment.router");
+const otpRouter = require("./otpRoutes");
 const app = express();
 
 /**
@@ -21,7 +22,7 @@ app.use(currentUser);
 /**
  * Routers
  */
-app.use("/auth", authRouter);
+app.use("/auth", otpRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
 
 /**

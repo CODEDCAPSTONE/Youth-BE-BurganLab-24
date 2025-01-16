@@ -6,7 +6,6 @@ const PasswordManager = require("../helpers/passwordManager");
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  balance: { type: Number, default: 1000 },
   phoneNumber: { type: Number, require: true },
   email: { type: String },
   cards: [

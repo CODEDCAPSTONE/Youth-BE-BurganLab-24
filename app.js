@@ -23,7 +23,7 @@ app.use(currentUser);
 /**
  * Routers
  */
-app.use("/auth", otpRouter, auth);
+app.use("/auth", authRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
 
 /**

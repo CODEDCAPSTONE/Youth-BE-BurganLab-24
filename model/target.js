@@ -9,6 +9,7 @@ const TargetSchema = new Schema({
   balanceTarget: { type: String, default: 0 },
   totalAmount: { type: String, require: true },
   duration: { type: Number, require },
+  salary: { type: String, require: true },
   users: {
     type: Schema.Types.ObjectId,
     ref: "User",

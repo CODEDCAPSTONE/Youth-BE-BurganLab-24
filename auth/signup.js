@@ -13,14 +13,19 @@ const router = express.Router();
 
 const validators = [
   body("username").not().isEmpty().withMessage("Username is required"),
+  body("phoneNumber")
+    .trim()
+    .isLength({ min: 4, max: 20 })
+    .withMessage("phoneNumber must be 8 number"),
   body("password")
     .trim()
     .isLength({ min: 4, max: 20 })
     .withMessage("Password must be between 4 and 20 characters"),
+  body("email").not().isEmpty().withMessage("Email is required"),
 ];
 
 router.post("/signup", validators, validateRequest, async (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, email, phoneNumber } = req.body;
 
   // Check for existing user
   const existingUser = await User.findOne({ username });
@@ -28,7 +33,7 @@ router.post("/signup", validators, validateRequest, async (req, res, next) => {
   if (existingUser) return next(BadRequestError("Username is taken"));
 
   // Create a user
-  const user = await User.create({ username, password });
+  const user = await User.create({ username, password, email, phoneNumber });
   console.log(jwt);
 
   // Generate a token

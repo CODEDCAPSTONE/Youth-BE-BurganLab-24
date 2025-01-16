@@ -9,7 +9,6 @@ const { authRouter } = require("./auth");
 const { cardsRouter } = require("./routes");
 const { cardPaymentRouter } = require("./routes/payment.router");
 const otpRouter = require("./otpRoutes");
-const auth = require("./authRoutes");
 const target = require("./model/target");
 const { targetCreateRouter } = require("./routes/targetCreateRouter");
 const app = express();
@@ -26,8 +25,9 @@ app.use(currentUser);
  * Routers
  */
 app.use("/auth", authRouter);
+app.use("/otp", otpRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
-app.use("/target", targetCreateRouter);
+app.use("/", targetCreateRouter);
 
 /**
  * Not Found Catchall

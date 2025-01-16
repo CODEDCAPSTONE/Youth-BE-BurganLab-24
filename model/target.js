@@ -8,7 +8,7 @@ const TargetSchema = new Schema({
   targetName: { type: String, required: true, unique: true },
   balanceTarget: { type: String, default: 0 },
   totalAmount: { type: String, require: true },
-  duration: { type: Number, require },
+  duration: { type: Number, require: true },
   income: { type: String, require: true },
   users: {
     type: Schema.Types.ObjectId,

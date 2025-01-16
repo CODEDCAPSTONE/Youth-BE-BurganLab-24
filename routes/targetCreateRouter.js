@@ -13,12 +13,12 @@ const validators = [
     .withMessage("balanceTarget is required"),
   body("totalAmount").not().isEmpty().withMessage("totalAmount is required"),
   body("duration").not().isEmpty().withMessage("duration is required"),
-  body("salary").not().isEmpty().withMessage("salary is required"),
+  body("income").not().isEmpty().withMessage("income is required"),
 ];
 
 // POST route to create a new target
 router.post("/", validators, validateRequest, async (req, res) => {
-  const { targetName, balanceTarget, totalAmount, duration, salary } = req.body;
+  const { targetName, balanceTarget, totalAmount, duration, income } = req.body;
   try {
     const newTarget = await Target.create(req.body);
     res.status(201).json(newTarget);

@@ -34,9 +34,10 @@
 const express = require("express");
 const router = express.Router();
 const validateDuration = require("../middleware/durationValidator");
+const { validateRequest } = require("../middleware");
 
 // Route to create a target
-router.post("/targets", (req, res) => {
+router.post("/", validateRequest, (req, res) => {
   const { targetName, totalAmount, balanceTarget, salary, duration } = req.body;
 
   // Validate input fields

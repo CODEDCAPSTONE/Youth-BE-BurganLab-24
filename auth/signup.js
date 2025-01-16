@@ -15,7 +15,7 @@ const validators = [
   body("username").not().isEmpty().withMessage("Username is required"),
   body("phoneNumber")
     .trim()
-    .isLength({ min: 4, max: 20 })
+    .isLength({ max: 8 })
     .withMessage("phoneNumber must be 8 number"),
   body("password")
     .trim()

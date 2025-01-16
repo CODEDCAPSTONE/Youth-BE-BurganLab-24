@@ -10,7 +10,7 @@ const TargetSchema = new Schema({
   totalAmount: { type: String, require: true },
   duration: { type: Number, require: true },
   income: { type: String, require: true },
-  users: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

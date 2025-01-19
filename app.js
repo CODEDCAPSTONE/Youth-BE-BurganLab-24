@@ -9,9 +9,10 @@ const { authRouter } = require("./auth");
 const { cardsRouter } = require("./routes");
 const { cardPaymentRouter } = require("./routes/payment.router");
 const otpRouter = require("./otpRoutes");
-const target = require("./model/target");
 const { targetCreateRouter } = require("./routes/targetCreateRouter");
 const { targetGetRouter } = require("./routes/getTarget");
+const { partTimeCreateRouter } = require("./routes/partTimeJobCreateRoute");
+const { jobGetRouter } = require("./routes/getParttime");
 const app = express();
 
 /**
@@ -29,6 +30,7 @@ app.use("/auth", authRouter);
 app.use("/otp", otpRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
 app.use("/targets", targetCreateRouter, targetGetRouter);
+app.use("/job", partTimeCreateRouter, jobGetRouter);
 
 /**
  * Not Found Catchall

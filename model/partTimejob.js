@@ -1,8 +1,7 @@
 const { model, Schema } = require("mongoose");
 const exp = require("constants");
-const { type } = require("os");
 
-const ParttimeSchema = new Schema({
+const jobSchema = new Schema({
   titleJob: { type: String, required: true },
   description: { type: String },
   user: {
@@ -11,4 +10,4 @@ const ParttimeSchema = new Schema({
   },
 });
 
-module.exports = model("Parttime", ParttimeSchema);
+module.exports = model("Job", jobSchema);

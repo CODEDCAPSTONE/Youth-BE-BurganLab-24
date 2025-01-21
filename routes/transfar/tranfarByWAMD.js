@@ -38,6 +38,7 @@ router.post(
       if (!fromUser) {
         return res.status(404).json({ error: "Sender user not found" });
       }
+      console.log(fromUser);
 
       if (fromUser.cards.length === 0) {
         return res

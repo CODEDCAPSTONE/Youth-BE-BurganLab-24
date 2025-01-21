@@ -12,11 +12,6 @@ const UserSchema = new Schema({
       ref: "Card",
     },
   ],
-  role: {
-    type: String,
-    enum: ["Admin", "Customer"],
-    default: "Customer",
-  },
 });
 
 module.exports = model("User", UserSchema);

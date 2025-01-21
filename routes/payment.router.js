@@ -37,16 +37,12 @@ router.post("/pay", requireAuth, validateRequest, async (req, res) => {
     }
 
     // Check if the user's balance is sufficient
-    if (user.balance < amount) {
+    if (card.balance < amount) {
       return res.status(400).json({ error: "Insufficient user balance." });
-    }
-    if (card.isExpired !== false) {
-      return res.status(400).json({ error: "Card is expired." });
     }
 
     // Deduct the amount from the user's balance
     user.balance -= amount;
-    card.isExpired = true;
     await user.save();
     await card.save();
     return res.status(200).json({
@@ -54,8 +50,7 @@ router.post("/pay", requireAuth, validateRequest, async (req, res) => {
       transaction: {
         cardNumber: card.cardNumber,
         amount,
-        remainingBalance: user.balance,
-        isExisExpired: true,
+        remainingBalance: card.balance,
       },
     });
   } catch (error) {

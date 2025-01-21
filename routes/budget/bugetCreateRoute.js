@@ -8,7 +8,6 @@ const { requireAuth, validateRequest } = require("../../middleware");
 const router = express.Router();
 
 const validators = [
-  body("category").not().isEmpty().withMessage("Category is required"),
   body("limit").not().isEmpty().withMessage("Limit is required"),
 ];
 
@@ -17,7 +16,21 @@ router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
   const { category, limit } = req.body;
   try {
     const newBudget = await Budget.create(req.body);
-    res.status(201).json(await newBudget.populate("user"));
+    const populatedBudget = await newBudget.populate("user");
+
+    // Adding the list of categories
+    const categoriesEnum = [
+      "Online shopping",
+      "Restaurant",
+      "Fuel",
+      "Other",
+      "Entertainment",
+    ];
+
+    res.status(201).json({
+      budget: populatedBudget,
+      categories: categoriesEnum,
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: error.message });

@@ -2,7 +2,10 @@ const { model, Schema } = require("mongoose");
 const exp = require("constants");
 
 const BudgetSchema = new Schema({
-  category: { type: String, require: true },
+  category: {
+    type: String,
+    enum: ["Online shopping", "Restaurant", "Fuel", "Other", "Entertainment"],
+  },
   limit: { type: Number, default: 20 },
 
   user: {

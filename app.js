@@ -18,7 +18,7 @@ const { jobGetRouter } = require("./routes/partTime/getParttime");
 const { budgetGetRouter } = require("./routes/budget/getBudget");
 const { budgetCreateRouter } = require("./routes/budget/bugetCreateRoute");
 const { transfarRouter } = require("./routes/transfar/transfar");
-const cardsGetRouter = require("./routes/card/cardsGetRouter");
+const { transferByWAMDRouter } = require("./routes/transfar/tranfarByWAMD");
 const app = express();
 
 /**
@@ -38,7 +38,7 @@ app.use("/cards", cardsRouter, cardPaymentRouter);
 app.use("/targets", targetCreateRouter, targetGetRouter);
 app.use("/job", partTimeCreateRouter, jobGetRouter);
 app.use("/budget", budgetGetRouter, budgetCreateRouter);
-app.use("/trasfar", transfarRouter);
+app.use("/trasfar", transfarRouter, transferByWAMDRouter);
 /**
  * Not Found Catchall
  */

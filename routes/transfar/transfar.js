@@ -6,29 +6,37 @@ const { requireAuth, validateRequest } = require("../../middleware");
 const router = express.Router();
 
 const transferValidators = [
-  body("fromCardId").not().isEmpty().withMessage("Sender card ID is required"),
-  body("toCardId").not().isEmpty().withMessage("Receiver card ID is required"),
-  body("amount").isNumeric().withMessage("Amount must be a number"),
+  body("fromCardNumber")
+    .notEmpty()
+    .withMessage("Sender card number is required"),
+  body("toCardNumber")
+    .notEmpty()
+    .withMessage("Receiver card number is required"),
+  body("amount")
+    .isNumeric()
+    .withMessage("Amount must be a number")
+    .custom((value) => value > 0)
+    .withMessage("Amount must be greater than zero"),
 ];
 
-// POST route to transfer money from one card to another
+// POST route to transfer money from one card to another using card numbers
 router.post(
   "/",
   requireAuth,
   transferValidators,
   validateRequest,
   async (req, res) => {
-    const { fromCardId, toCardId, amount } = req.body;
+    const { fromCardNumber, toCardNumber, amount } = req.body;
 
     try {
-      // Find the sender's card
-      const fromCard = await Card.findByIdAndUpdate(fromCardId);
+      // Find the sender's card by card number
+      const fromCard = await Card.findOne({ cardNumber: fromCardNumber });
       if (!fromCard) {
         return res.status(404).json({ error: "Sender card not found" });
       }
 
-      // Find the receiver's card
-      const toCard = await Card.findByIdAndUpdate(toCardId);
+      // Find the receiver's card by card number
+      const toCard = await Card.findOne({ cardNumber: toCardNumber });
       if (!toCard) {
         return res.status(404).json({ error: "Receiver card not found" });
       }
@@ -58,10 +66,10 @@ router.post(
         },
       });
     } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: error.message });
+      console.error("Transfer error:", error.message);
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 );
 
-module.exports = { transfarRouter: router };
+module.exports = { transferRouter: router };

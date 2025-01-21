@@ -1,7 +1,7 @@
 const express = require("express");
 const { body } = require("express-validator");
-const Card = require("../model/card");
-const { requireAuth, validateRequest } = require("../middleware");
+const Card = require("../../model/card");
+const { requireAuth, validateRequest } = require("../../middleware");
 
 const router = express.Router();
 

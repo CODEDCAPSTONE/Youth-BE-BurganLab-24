@@ -1,5 +1,5 @@
-const { NotFoundError } = require("../errors");
-const Card = require("../model/card");
+const { NotFoundError } = require("../../errors");
+const Card = require("../../model/card");
 
 const findCard = async function (req, res, next, id) {
   const foundCard = await Card.findById(id);

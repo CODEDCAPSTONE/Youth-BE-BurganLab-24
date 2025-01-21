@@ -1,6 +1,6 @@
 const express = require("express");
-const Card = require("../model/card");
-const { requireAuth, validateRequest } = require("../middleware");
+const Card = require("../../model/card");
+const { requireAuth, validateRequest } = require("../../middleware");
 
 const router = express.Router();
 

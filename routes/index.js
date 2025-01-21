@@ -1,7 +1,7 @@
 const express = require("express");
 
-const { cardsGetRouter } = require("./cardsGetRouter");
-const { cardCreateRouter } = require("./cardCreateRouter");
+const { cardsGetRouter } = require("./card/cardsGetRouter");
+const { cardCreateRouter } = require("./card/cardCreateRouter");
 const { balanceGetRouter } = require("./getBalance");
 
 const router = express.Router();

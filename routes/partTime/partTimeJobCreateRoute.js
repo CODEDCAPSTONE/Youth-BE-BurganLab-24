@@ -1,7 +1,7 @@
 const express = require("express");
 const { body } = require("express-validator");
-const Job = require("../model/partTimejob");
-const { requireAuth, validateRequest } = require("../middleware");
+const Job = require("../../model/partTimejob");
+const { requireAuth, validateRequest } = require("../../middleware");
 
 const router = express.Router();
 

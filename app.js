@@ -9,10 +9,14 @@ const { authRouter } = require("./auth");
 const { cardsRouter } = require("./routes");
 const { cardPaymentRouter } = require("./routes/payment.router");
 const otpRouter = require("./otpRoutes");
-const { targetCreateRouter } = require("./routes/targetCreateRouter");
-const { targetGetRouter } = require("./routes/getTarget");
-const { partTimeCreateRouter } = require("./routes/partTimeJobCreateRoute");
-const { jobGetRouter } = require("./routes/getParttime");
+const { targetCreateRouter } = require("./routes/target/targetCreateRouter");
+const { targetGetRouter } = require("./routes/target/getTarget");
+const {
+  partTimeCreateRouter,
+} = require("./routes/partTime/partTimeJobCreateRoute");
+const { jobGetRouter } = require("./routes/partTime/getParttime");
+const { budgetGetRouter } = require("./routes/budget/getBudget");
+const { budgetCreateRouter } = require("./routes/budget/bugetCreateRoute");
 const app = express();
 
 /**
@@ -31,6 +35,7 @@ app.use("/otp", otpRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
 app.use("/targets", targetCreateRouter, targetGetRouter);
 app.use("/job", partTimeCreateRouter, jobGetRouter);
+app.use("/budget", budgetGetRouter, budgetCreateRouter);
 
 /**
  * Not Found Catchall

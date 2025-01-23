@@ -12,7 +12,7 @@ const validators = [
 
 // POST route to create a new target
 router.post("/", validators, validateRequest, async (req, res) => {
-  const { titleJob, description } = req.body;
+  const { titleJob, description, isExpired } = req.body;
   try {
     const newPart = await Job.create(req.body);
     res.status(201).json(newPart);

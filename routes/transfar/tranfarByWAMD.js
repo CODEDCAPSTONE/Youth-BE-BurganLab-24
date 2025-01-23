@@ -64,7 +64,6 @@ router.post(
       const fromCard = fromUser.cards[0]; // Assuming transfer from the first card
       const toCard = toUser.cards[0]; // Assuming transfer to the first card
 
-      // Check if the sender has enough balance
       if (fromCard.balance < amount) {
         return res.status(400).json({ error: "Insufficient balance" });
       }

@@ -15,6 +15,7 @@ async function toHash(password) {
 async function compare(storedPassword, suppliedPassword) {
   const [hashedPassword, salt] = storedPassword.split(".");
 
+  console.log("TYPE" + typeof salt);
   const buf = await scryptAsync(suppliedPassword, salt, KEYLEN);
 
   return buf.toString("hex") === hashedPassword;

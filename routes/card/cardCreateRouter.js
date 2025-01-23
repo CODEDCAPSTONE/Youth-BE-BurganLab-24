@@ -2,6 +2,7 @@ const express = require("express");
 const { body } = require("express-validator");
 const Card = require("../../model/card");
 const { requireAuth, validateRequest } = require("../../middleware");
+const User = require("../../model/user");
 
 const router = express.Router();
 
@@ -46,6 +47,10 @@ router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
 
     // Create and save the new card
     const newCard = await Card.create(req.body);
+    let currentUser = await User.findById(req.user.id);
+    currentUser.cards.push(newCard);
+    currentUser.save();
+
     res.status(201).json(newCard);
   } catch (error) {
     console.error("Error creating card:", error.message);

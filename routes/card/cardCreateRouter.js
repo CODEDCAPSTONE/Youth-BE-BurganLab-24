@@ -25,6 +25,17 @@ function generateCvv() {
   return Math.floor(100 + Math.random() * 900); // Random number between 100 and 999
 }
 
+// Function to update card balance
+async function updateCardBalance(cardId, amount) {
+  const card = await Card.findById(cardId);
+  if (!card) {
+    throw new Error("Card not found");
+  }
+  card.balance += amount;
+  await card.save();
+  return card;
+}
+
 // POST route to create a new card
 router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
   try {
@@ -58,4 +69,4 @@ router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
   }
 });
 
-module.exports = { cardCreateRouter: router };
+module.exports = { cardCreateRouter: router, updateCardBalance };

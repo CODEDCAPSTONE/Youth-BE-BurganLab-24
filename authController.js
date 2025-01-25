@@ -1,7 +1,23 @@
 // controllers/authController.js
 const bcrypt = require("bcrypt");
-const User = require("./model/user");
-const OTP = require("./model/otp");
+const User = require("../model/user");
+const OTP = require("../model/otp");
+const Card = require("../model/card");
+
+// Function to generate Visa-like card number
+function generateCardNumber() {
+  const firstSix = "415254"; // Static first 6 digits
+  let remainingTen = "";
+  for (let i = 0; i < 10; i++) {
+    remainingTen += Math.floor(Math.random() * 10); // Generate random digits
+  }
+  return firstSix + remainingTen;
+}
+
+// Function to generate a random 3-digit CVV
+function generateCvv() {
+  return Math.floor(100 + Math.random() * 900); // Random number between 100 and 999
+}
 
 exports.signup = async (req, res) => {
   try {
@@ -36,22 +52,49 @@ exports.signup = async (req, res) => {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: `Hashing password error for ${password}: ` + error.message,
+        message: "Error hashing password",
       });
     }
+
+    // Create new user
     const newUser = await User.create({
       username,
       email,
       password: hashedPassword,
       role,
     });
+
+    // Generate unique card number and CVV
+    let cardNumber, cvv;
+    do {
+      cardNumber = generateCardNumber();
+    } while (await Card.exists({ cardNumber }));
+
+    do {
+      cvv = generateCvv();
+    } while (await Card.exists({ cvv }));
+
+    // Create a new card for the user
+    const newCard = await Card.create({
+      name: `${username}'s Card`,
+      cardNumber,
+      expiryDate: "10/28",
+      cvv,
+      balance: 0,
+      user: newUser._id,
+    });
+
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
       user: newUser,
+      card: newCard,
     });
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };

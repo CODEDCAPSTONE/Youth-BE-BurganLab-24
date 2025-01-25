@@ -8,6 +8,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   phoneNumber: { type: Number, require: true },
   email: { type: String },
+  income: { type: Number },
   cards: [
     {
       type: Schema.Types.ObjectId,

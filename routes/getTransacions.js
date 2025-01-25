@@ -4,7 +4,7 @@ const { requireAuth } = require("../middleware");
 
 const router = express.Router();
 
-router.get("/", requireAuth, async (req, res) => {
+router.get("/transaction", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate("transaction");
 

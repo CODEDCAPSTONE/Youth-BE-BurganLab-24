@@ -17,7 +17,7 @@ const validators = [
 
 // POST route to create a new target
 router.post("/", validators, validateRequest, async (req, res) => {
-  const { targetName, balanceTarget, totalAmount, duration, income } = req.body;
+  const { targetName, balanceTarget, totalAmount, duration } = req.body;
   try {
     const newTarget = await Target.create(req.body);
     res.status(201).json(newTarget);

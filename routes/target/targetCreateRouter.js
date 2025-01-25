@@ -1,29 +1,59 @@
 const express = require("express");
-const { body } = require("express-validator");
-const Target = require("../../model/target");
-const { requireAuth, validateRequest } = require("../../middleware");
-
 const router = express.Router();
+const Target = require("../../model/target"); // Import the Target model
+const validateDuration = require("../../middleware/durationValidator"); // Validate duration
 
-const validators = [
-  body("targetName").not().isEmpty().withMessage("targetName is required"),
-  body("balanceTarget")
-    .not()
-    .isEmpty()
-    .withMessage("balanceTarget is required"),
-  body("totalAmount").not().isEmpty().withMessage("totalAmount is required"),
-  body("duration").not().isEmpty().withMessage("duration is required"),
-];
+// Route to create a new target
+router.post("/", async (req, res) => {
+  const { targetName, totalAmount, balanceTarget, income, duration, userId } =
+    req.body;
 
-// POST route to create a new target
-router.post("/", validators, validateRequest, async (req, res) => {
-  const { targetName, balanceTarget, totalAmount, duration, income } = req.body;
+  // Validate input fields
+  if (
+    !targetName ||
+    !totalAmount ||
+    !balanceTarget ||
+    !income ||
+    !duration ||
+    !validateDuration(duration)
+  ) {
+    return res.status(400).json({
+      message:
+        "All fields are required, and duration must be a positive integer up to 12 months",
+    });
+  }
+
   try {
-    const newTarget = await Target.create(req.body);
-    res.status(201).json(newTarget);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: error.message });
+    // Check if the targetName already exists for the user
+    const existingTarget = await Target.findOne({ targetName, user: userId });
+    if (existingTarget) {
+      return res.status(400).json({ message: "Target name must be unique" });
+    }
+
+    // Calculate monthly savings goal
+    const monthlySavingsGoal = (totalAmount - balanceTarget) / duration;
+
+    // Create the target
+    const newTarget = new Target({
+      targetName,
+      totalAmount,
+      balanceTarget,
+      income,
+      duration,
+      user: userId,
+    });
+
+    // Save the target to the database
+    await newTarget.save();
+
+    // Respond with the created target and calculated fields
+    res.status(201).json({
+      ...newTarget._doc,
+      monthlySavingsGoal,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

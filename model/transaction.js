@@ -1,5 +1,5 @@
 const { model, Schema } = require("mongoose");
-const card = require("./card");
+const user = require("./card");
 
 const TransactionSchema = new Schema({
   name: { type: String, required: true },
@@ -9,6 +9,10 @@ const TransactionSchema = new Schema({
   card: {
     type: Schema.Types.ObjectId,
     ref: "Card",
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 

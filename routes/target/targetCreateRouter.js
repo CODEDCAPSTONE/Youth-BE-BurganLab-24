@@ -3,17 +3,19 @@ const router = express.Router();
 const Target = require("../../model/target"); // Import the Target model
 const validateDuration = require("../../middleware/durationValidator"); // Validate duration
 
+const User = require("../../model/user"); // Import the User model
+const { requireAuth } = require("../../middleware");
+
 // Route to create a new target
 router.post("/", async (req, res) => {
+  requireAuth;
   const { targetName, totalAmount, balanceTarget, income, duration, userId } =
     req.body;
 
   // Validate input fields
   if (
     !targetName ||
-    !totalAmount ||
     !balanceTarget ||
-    !income ||
     !duration ||
     !validateDuration(duration)
   ) {
@@ -31,25 +33,35 @@ router.post("/", async (req, res) => {
     }
 
     // Calculate monthly savings goal
-    const monthlySavingsGoal = (totalAmount - balanceTarget) / duration;
+
+    const monthlyDeduction = balanceTarget / duration;
 
     // Create the target
     const newTarget = new Target({
       targetName,
       totalAmount,
       balanceTarget,
-      income,
+
       duration,
+      monthlyDeduction: monthlyDeduction,
       user: userId,
     });
 
     // Save the target to the database
     await newTarget.save();
 
+    // Add the target to the user's targets array
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.targets.push(newTarget);
+    await user.save();
+
     // Respond with the created target and calculated fields
     res.status(201).json({
       ...newTarget._doc,
-      monthlySavingsGoal,
+      monthlyDeduction,
     });
   } catch (err) {
     console.error(err);

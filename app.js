@@ -23,6 +23,10 @@ const { transferRouter } = require("./routes/transfar/transfar");
 const { transferByWAMDRouter } = require("./routes/transfar/tranfarByWAMD");
 const { offerCreateRouter } = require("./routes/offer/offerCreateRouter");
 const { offerGetRouter } = require("./routes/offer/getOffer");
+const {
+  updateIncome,
+  getIncome,
+} = require("./routes/controllers/userController");
 const app = express();
 
 /**
@@ -45,6 +49,7 @@ app.use("/media", express.static(path.join(__dirname, "media")));
 app.use("/offer", offerCreateRouter, offerGetRouter);
 app.use("/budget", budgetGetRouter, budgetCreateRouter);
 app.use("/transfer", transferRouter, transferByWAMDRouter);
+app.use("/user", updateIncome, getIncome); // Corrected usage
 /**
  * Not Found Catchall
  */

@@ -8,10 +8,9 @@ const CardSchema = new Schema({
   cardNumber: { type: Number, unique: true },
   expiryDate: { type: String, required: true, default: "10/28" },
   cvv: { type: Number, unique: true },
-  limit: { type: Number, default: 20 },
   balance: { type: Number, default: 500 },
 
-  user: {
+  user_id: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

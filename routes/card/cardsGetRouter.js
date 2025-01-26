@@ -5,7 +5,7 @@ const { requireAuth, validateRequest } = require("../../middleware");
 const router = express.Router();
 
 router.get("/", requireAuth, validateRequest, async (req, res) => {
-  const cards = await Card.find({ user: req.user.id });
+  const cards = await Card.find({ userId: req.user.id });
   res.json(cards);
 });
 

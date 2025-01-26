@@ -6,9 +6,10 @@ const user = require("./user");
 
 const TargetSchema = new Schema({
   targetName: { type: String, required: true, unique: true },
-  balanceTarget: { type: Number, default: 0 },
+  balanceTarget: { type: Number },
   totalAmount: { type: Number, default: 0 },
   duration: { type: Number, require: true },
+  monthlyDeduction: { type: Number },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

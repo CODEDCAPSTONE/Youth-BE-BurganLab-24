@@ -1,8 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const path = require("path");
-const multer = require("multer");
+// const path = require("path");
+// const multer = require("multer");
 
 const { handleErrors, currentUser } = require("./middleware");
 const { NotFoundError } = require("./errors");
@@ -23,6 +23,7 @@ const { transferRouter } = require("./routes/transfar/transfar");
 const { transferByWAMDRouter } = require("./routes/transfar/tranfarByWAMD");
 const { offerCreateRouter } = require("./routes/offer/offerCreateRouter");
 const { offerGetRouter } = require("./routes/offer/getOffer");
+const { transactionsRouter } = require("./routes/getTransacions");
 const app = express();
 
 /**
@@ -41,10 +42,11 @@ app.use("/otp", otpRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
 app.use("/targets", targetCreateRouter, targetGetRouter);
 app.use("/job", partTimeCreateRouter, jobGetRouter);
-app.use("/media", express.static(path.join(__dirname, "media")));
+// app.use("/media", express.static(path.join(__dirname, "media")));
 app.use("/offer", offerCreateRouter, offerGetRouter);
 app.use("/budget", budgetGetRouter, budgetCreateRouter);
 app.use("/transfer", transferRouter, transferByWAMDRouter);
+app.use("/transaction", transactionsRouter);
 /**
  * Not Found Catchall
  */

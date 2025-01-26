@@ -3,13 +3,14 @@ const { model, Schema } = require("mongoose");
 
 const PasswordManager = require("../helpers/passwordManager");
 const transaction = require("./transaction");
+const Card = require("./card"); // Import the Card model
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phoneNumber: { type: Number, require: true },
   email: { type: String },
-  income: { type: Number },
+  income: { type: Number, default: 200 },
   cards: [
     {
       type: Schema.Types.ObjectId,

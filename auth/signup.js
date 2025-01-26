@@ -26,6 +26,7 @@ const validators = [
 
 router.post("/signup", validators, validateRequest, async (req, res, next) => {
   const { username, password, email, phoneNumber } = req.body;
+  console.log("here");
 
   // Check for existing user
   const existingUser = await User.findOne({ username });

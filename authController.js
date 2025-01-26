@@ -63,11 +63,13 @@ exports.signup = async (req, res) => {
       password: hashedPassword,
       role,
     });
+    console.log("newUser", newUser);
 
     // Generate unique card number and CVV
     let cardNumber, cvv;
     do {
       cardNumber = generateCardNumber();
+      console.log("cardNumber", cardNumber);
     } while (await Card.exists({ cardNumber }));
 
     do {

@@ -8,6 +8,7 @@ const User = require("../model/user");
 
 const validateRequest = require("../middleware/validateRequest");
 const { BadRequestError } = require("../errors");
+const { createInitialCardForUser } = require("../routes/card/cardCreateRouter");
 
 const router = express.Router();
 
@@ -37,12 +38,16 @@ router.post("/signup", validators, validateRequest, async (req, res, next) => {
   const user = await User.create({ username, password, email, phoneNumber });
   console.log(jwt);
 
+  // Create an initial card for the new user
+  const card = await createInitialCardForUser(user._id);
+  user.cards.push(card);
+  await user.save();
+
   // Generate a token
   const token = jwt.sign(
     { id: user._id, username: user.username },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRATION_MS },
-    { balance: 1000 }
+    { expiresIn: process.env.JWT_EXPIRATION_MS }
   );
 
   // Respond with the token

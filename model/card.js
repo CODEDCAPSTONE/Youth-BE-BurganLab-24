@@ -4,11 +4,12 @@ const exp = require("constants");
 const { type } = require("os");
 
 const CardSchema = new Schema({
-  name: { type: String, required: true },
+  // name: { type: String, required: true },
   cardNumber: { type: Number, unique: true },
   expiryDate: { type: String, required: true, default: "10/28" },
   cvv: { type: Number, unique: true },
-  balance: { type: Number, default: 500 },
+  typeDebit: { type: Boolean, default: true },
+  balance: { type: Number, default: 0 },
 
   user_id: {
     type: Schema.Types.ObjectId,

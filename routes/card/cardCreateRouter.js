@@ -36,6 +36,51 @@ async function updateCardBalance(cardId, amount) {
   return card;
 }
 
+// Function to create a card with balance 0 for a new user
+async function createInitialCardForUser(userId) {
+  let cardNumber = generateCardNumber();
+  const cvv = generateCvv();
+
+  let newCard = await Card.find({ cardNumber: cardNumber });
+
+  while (newCard.length > 0) {
+    cardNumber = generateCardNumber();
+    newCard = await Card.find({ cardNumber: cardNumber });
+  }
+
+  const card = await Card.create({
+    cardNumber,
+    cvv,
+    balance: 0,
+    user: userId,
+  });
+
+  return card;
+}
+
+// Function to create a new card with typeDebit set to false
+async function createNonDebitCardForUser(userId) {
+  let cardNumber = generateCardNumber();
+  const cvv = generateCvv();
+
+  let newCard = await Card.find({ cardNumber: cardNumber });
+
+  while (newCard.length > 0) {
+    cardNumber = generateCardNumber();
+    newCard = await Card.find({ cardNumber: cardNumber });
+  }
+
+  const card = await Card.create({
+    cardNumber,
+    cvv,
+    balance: 0,
+    user: userId,
+    typeDebit: false,
+  });
+
+  return card;
+}
+
 // POST route to create a new card
 router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
   try {
@@ -69,4 +114,9 @@ router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
   }
 });
 
-module.exports = { cardCreateRouter: router, updateCardBalance };
+module.exports = {
+  cardCreateRouter: router,
+  updateCardBalance,
+  createInitialCardForUser,
+  createNonDebitCardForUser, // Export the new function
+};

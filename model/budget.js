@@ -2,8 +2,10 @@ const { model, Schema } = require("mongoose");
 const exp = require("constants");
 
 const BudgetSchema = new Schema({
-  category: {},
-  limit: { type: Number, default: 20 },
+  onlineShopping: { type: Number, default: 0 },
+  dining: { type: Number, default: 0 },
+  fuel: { type: Number, default: 0 },
+  entertainment: { type: Number, default: 0 },
 
   user: {
     type: Schema.Types.ObjectId,

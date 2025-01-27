@@ -12,6 +12,8 @@ const UserSchema = new Schema({
   email: { type: String },
   income: { type: Number, default: 200 },
   student: { type: Boolean, default: false },
+  jobApply: { type: Boolean, default: false },
+
   cards: [
     {
       type: Schema.Types.ObjectId,

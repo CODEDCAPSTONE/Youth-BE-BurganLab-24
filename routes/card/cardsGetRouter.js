@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get("/", requireAuth, validateRequest, async (req, res) => {
   const user = await User.findById(req.user.id).populate("cards");
-  const cards = user.cards;
+  let cards = user.cards;
+  if (cards.length == 0) cards = await Card.find({user_id: req.user.id});
   res.json(cards);
 });
 

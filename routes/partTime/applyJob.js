@@ -1,11 +1,13 @@
 const express = require("express");
 const { requireAuth, validateRequest } = require("../../middleware");
 const User = require("../../model/user");
+const Job = require("../../model/partTimejob");
 
 const router = express.Router();
 
-// POST route to apply for a part-time job
 router.post("/apply", requireAuth, validateRequest, async (req, res) => {
+  const { jobId } = req.body;
+
   try {
     const currentUser = req.user;
 
@@ -18,13 +20,19 @@ router.post("/apply", requireAuth, validateRequest, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.jobApply) {
-      return res
-        .status(400)
-        .json({ message: "You have already applied for a job" });
+    const job = await Job.findOne({ _id: jobId });
+
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
     }
 
-    user.jobApply = true;
+    if (user.appliedJobs.includes(job._id)) {
+      return res
+        .status(400)
+        .json({ message: "You have already applied for this job" });
+    }
+
+    user.appliedJobs.push(job._id);
     await user.save();
 
     return res
@@ -35,5 +43,4 @@ router.post("/apply", requireAuth, validateRequest, async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 module.exports = { applyJobCreateRouter: router };

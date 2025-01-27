@@ -53,11 +53,6 @@ app.use("/cards", cardsRouter, cardPaymentRouter);
 
 app.use("/targets", targetCreateRouter, targetGetRouter, targetCancelRouter);
 app.use("/job", partTimeCreateRouter, jobGetRouter, applyJobCreateRouter);
-app.use("/media", express.static(path.join(__dirname, "media")));
-
-app.use("/targets", targetCreateRouter, targetGetRouter);
-app.use("/job", partTimeCreateRouter, jobGetRouter);
-// app.use("/media", express.static(path.join(__dirname, "media")));
 
 app.use("/offer", offerCreateRouter, offerGetRouter);
 app.use("/budget", budgetGetRouter, budgetCreateRouter);

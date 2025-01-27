@@ -6,9 +6,9 @@ const User = require("../../model/user");
 
 const router = express.Router();
 
-const validators = [
-  body("name").not().isEmpty().withMessage("name is required"),
-];
+// const validators = [
+//   body("name").not().isEmpty().withMessage("name is required"),
+// ];
 
 // Function to generate Visa-like card number
 function generateCardNumber() {
@@ -53,6 +53,7 @@ async function createInitialCardForUser(userId) {
     cvv,
     balance: 0,
     user: userId,
+    typeDebit: true,
   });
 
   return card;
@@ -82,7 +83,7 @@ async function createNonDebitCardForUser(userId) {
 }
 
 // POST route to create a new card
-router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
+router.post("/", requireAuth, validateRequest, async (req, res) => {
   try {
     let cardNumber, cvv;
 
@@ -107,7 +108,7 @@ router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
     currentUser.cards.push(newCard);
     currentUser.save();
 
-    res.status(201).json(newCard);
+    res.status(201).json({ card: newCard, userId: req.user.id }); // Include user ID in the response
   } catch (error) {
     console.error("Error creating card:", error.message);
     res.status(500).json({ error: error.message });

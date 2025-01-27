@@ -2,102 +2,87 @@ const express = require("express");
 const { body } = require("express-validator");
 const Budget = require("../../model/budget");
 const Card = require("../../model/card");
-
+const User = require("../../model/user");
 const { requireAuth, validateRequest } = require("../../middleware");
 
 const router = express.Router();
 
-const validators = [
-  // body("limit").not().isEmpty().withMessage("Limit is required"),
-];
+router.post(
+  "/create",
+  requireAuth,
+  [
+    body("onlineShopping").isNumeric(),
+    body("dining").isNumeric(),
+    body("fuel").isNumeric(),
+    body("entertainment").isNumeric(),
+  ],
+  validateRequest,
+  async (req, res) => {
+    const { onlineShopping, dining, fuel, entertainment } = req.body;
+    const userId = req.user.id;
 
-// POST route to create a new budget
-router.post("/", requireAuth, validators, validateRequest, async (req, res) => {
-  const { category, limit } = req.body;
-  try {
-    const newBudget = await Budget.create(req.body);
-    const populatedBudget = await newBudget.populate("user");
-
-    // Adding the list of categories
-    const categoriesEnum = [
-      "Online shopping",
-      "Restaurant",
-      "Fuel",
-      "Entertainment",
-      "Other",
-    ];
-
-    res.status(201).json({
-      budget: populatedBudget,
-      categories: categoriesEnum,
+    const budget = new Budget({
+      onlineShopping,
+      dining,
+      fuel,
+      entertainment,
+      user: userId,
     });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: error.message });
+
+    await budget.save();
+
+    const user = await User.findById(userId);
+    user.budgets = budget.id;
+    await user.save();
+
+    res.status(201).send(budget);
   }
+);
+
+router.put(
+  "/edit/:id",
+  requireAuth,
+  [
+    body("onlineShopping").isNumeric(),
+    body("dining").isNumeric(),
+    body("fuel").isNumeric(),
+    body("entertainment").isNumeric(),
+  ],
+  validateRequest,
+  async (req, res) => {
+    const { onlineShopping, dining, fuel, entertainment } = req.body;
+    const budgetId = req.params.id;
+
+    const budget = await Budget.findById(budgetId);
+
+    if (!budget) {
+      return res.status(404).send({ error: "Budget not found" });
+    }
+
+    budget.set({
+      onlineShopping,
+      dining,
+      fuel,
+      entertainment,
+    });
+
+    await budget.save();
+
+    res.send(budget);
+  }
+);
+
+router.get("/", requireAuth, async (req, res) => {
+  const budgetId = req.params.id;
+
+  const user = await User.findById(req.user.id).populate("budgets");
+  const budget = user.budgets;
+
+  if (!budget) {
+    return res.status(404).send({ error: "Budget not found" });
+  }
+
+  res.send(budget);
 });
-
-// POST route to edit budget
-router.post(
-  "/edit",
-  requireAuth,
-  validators,
-  validateRequest,
-  async (req, res) => {
-    // const { category, limit } = req.body;
-    try {
-      // Adding the list of categories
-      const categoriesEnum = [
-        "Online shopping",
-        "Restaurant",
-        "Fuel",
-        "Entertainment",
-        "Other",
-      ];
-      for (let x in req.body) {
-        await Budget.findOneAndUpdate({ category: x }, { limit: req.body[x] });
-      }
-      // const currentBudget = await Budget.findOne(req.body[categoriesEnum[0]]);
-
-      res.status(201).json({
-        message: "Successfull",
-      });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
-
-router.post(
-  "/edit",
-  requireAuth,
-  validators,
-  validateRequest,
-  async (req, res) => {
-    // const { category, limit } = req.body;
-    try {
-      // Adding the list of categories
-      const categoriesEnum = [
-        "Online shopping",
-        "Restaurant",
-        "Fuel",
-        "Entertainment",
-        "Other",
-      ];
-      for (let x in req.body) {
-        await Budget.findOneAndUpdate({ category: x }, { limit: req.body[x] });
-      }
-      // const currentBudget = await Budget.findOne(req.body[categoriesEnum[0]]);
-
-      res.status(201).json({
-        message: "Successfull",
-      });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
 
 module.exports = { budgetCreateRouter: router };

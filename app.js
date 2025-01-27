@@ -42,13 +42,13 @@ app.use(currentUser);
  * Routers
  */
 app.use("/auth", authRouter);
-app.use("/otp", otpRouter);
+// app.use("/otp", otpRouter);
 app.use("/cards", cardsRouter, cardPaymentRouter);
 app.use("/targets", targetCreateRouter, targetGetRouter, targetCancelRouter);
 app.use("/job", partTimeCreateRouter, jobGetRouter);
 app.use("/media", express.static(path.join(__dirname, "media")));
 app.use("/offer", offerCreateRouter, offerGetRouter);
-app.use("/budget", budgetGetRouter, budgetCreateRouter);
+app.use("/budget", budgetCreateRouter);
 app.use("/transfer", transferRouter, transferByWAMDRouter);
 app.use("/user", updateIncome, getIncome); // Corrected usage
 /**

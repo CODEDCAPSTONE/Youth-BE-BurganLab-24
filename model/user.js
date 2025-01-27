@@ -4,6 +4,7 @@ const { model, Schema } = require("mongoose");
 const PasswordManager = require("../helpers/passwordManager");
 const transaction = require("./transaction");
 const Card = require("./card"); // Import the Card model
+const budget = require("./budget");
 
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
@@ -28,6 +29,12 @@ const UserSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Target",
+    },
+  ],
+  budgets: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Budget",
     },
   ],
 });

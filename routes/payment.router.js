@@ -9,7 +9,7 @@ const router = express.Router();
 // POST route to make a payment using the card
 router.post("/pay", requireAuth, validateRequest, async (req, res) => {
   try {
-    const { cardNumber, amount, category } = req.body;
+    const { name, cardNumber, amount, category } = req.body;
 
     // Validate input
     if (!cardNumber || !amount || amount <= 0) {
@@ -18,24 +18,17 @@ router.post("/pay", requireAuth, validateRequest, async (req, res) => {
 
     // Find the card using the cardNumber
     const card = await Card.findOne({ cardNumber }).populate("user");
+    console.log(card);
     if (!card) {
       return res.status(404).json({ error: "Card not found." });
     }
 
-    // Verify that the user owns this card
-    const user = card.user;
-    if (!user) {
-      return res
-        .status(404)
-        .json({ error: "User associated with this card not found." });
-    }
-
     // Check if the amount exceeds the card's limit
-    if (amount > card.limit) {
-      return res
-        .status(400)
-        .json({ error: "Transaction amount exceeds card limit." });
-    }
+    // if (amount > card.limit) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Transaction amount exceeds card limit." });
+    // }
 
     // Check if the user's balance is sufficient
     if (card.balance < amount) {
@@ -44,8 +37,23 @@ router.post("/pay", requireAuth, validateRequest, async (req, res) => {
 
     // Deduct the amount from the user's balance
     card.balance -= amount;
-    await user.save();
     await card.save();
+
+    // Create a new transaction
+    const transaction = await Transaction.create({
+      name,
+      card: card._id,
+      amount,
+      category,
+      date: new Date(),
+      user: card.user._id,
+    });
+
+    // Add the transaction to the user's transactions
+    const user = await User.findById(card.user._id);
+    user.transactions.push(transaction._id);
+    await user.save();
+
     return res.status(200).json({
       message: "Payment successful!",
       transaction: {

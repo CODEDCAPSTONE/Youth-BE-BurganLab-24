@@ -11,7 +11,7 @@ const CardSchema = new Schema({
   typeDebit: { type: Boolean, default: true },
   balance: { type: Number, default: 0 },
 
-  user_id: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },

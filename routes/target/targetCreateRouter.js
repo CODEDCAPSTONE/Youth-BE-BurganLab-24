@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Target = require("../../model/target"); // Import the Target model
 const validateDuration = require("../../middleware/durationValidator"); // Validate duration
+
 const User = require("../../model/user"); // Import the User model
 const { requireAuth } = require("../../middleware");
 
@@ -32,6 +33,7 @@ router.post("/", async (req, res) => {
     }
 
     // Calculate monthly savings goal
+
     const monthlyDeduction = balanceTarget / duration;
 
     // Create the target
@@ -39,6 +41,7 @@ router.post("/", async (req, res) => {
       targetName,
       totalAmount,
       balanceTarget,
+
       duration,
       monthlyDeduction: monthlyDeduction,
       user: userId,

@@ -1,7 +1,10 @@
 const express = require("express");
 const { body } = require("express-validator");
 const { requireAuth, validateRequest } = require("../../middleware");
-const { updateCardBalance } = require("./cardCreateRouter");
+const {
+  updateCardBalance,
+  createNonDebitCardForUser,
+} = require("./cardCreateRouter");
 const User = require("../../model/user");
 const Transaction = require("../../model/transaction");
 const Target = require("../../model/target");
@@ -139,5 +142,50 @@ router.post(
     }
   }
 );
+
+router.post("/student", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate("cards");
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.student) {
+      return res.status(400).json({ error: "Student benefit already used" });
+    }
+
+    if (user.cards.length === 0) {
+      return res.status(400).json({ error: "No cards found for user" });
+    }
+
+    // Add 100 to the balance of the first card
+    const firstCard = user.cards[0];
+    const updatedFirstCard = await updateCardBalance(firstCard._id, 100);
+
+    // Create a new non-debit card
+    const newCard = await createNonDebitCardForUser(user._id);
+
+    // Create a transaction for the reward
+    const rewardTransaction = new Transaction({
+      name: "student reward",
+      amount: 100,
+      category: "Reward",
+      date: new Date().toISOString(),
+      card: firstCard._id,
+    });
+    await rewardTransaction.save();
+
+    // Update user student status
+    user.student = true;
+    user.cards.push(newCard);
+    user.transactions.push(rewardTransaction);
+    await user.save();
+
+    res.status(200).json({ updatedFirstCard, newCard });
+  } catch (error) {
+    console.error("Error processing student request:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = { cardAdd: router };

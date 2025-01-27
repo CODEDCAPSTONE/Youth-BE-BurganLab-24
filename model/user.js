@@ -39,12 +39,10 @@ const UserSchema = new Schema({
       ref: "Target",
     },
   ],
-  budgets: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Budget",
-    },
-  ],
+  budgets: {
+    type: Schema.Types.ObjectId,
+    ref: "Budget",
+  },
 });
 
 UserSchema.pre("save", async function (done) {

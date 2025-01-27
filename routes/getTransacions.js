@@ -6,7 +6,7 @@ const { requireAuth } = require("../middleware");
 
 const router = express.Router();
 
-router.get("/transaction", requireAuth, async (req, res) => {
+router.get("/", requireAuth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate("transactions");
 
@@ -46,10 +46,10 @@ router.get("/card", requireAuth, async (req, res) => {
   const { cardNumber } = req.body;
   try {
     const card = await Card.findOne({ cardNumber });
-    const list = await Transaction.find({card: card.id});
+    const list = await Transaction.find({ card: card.id });
 
     res.status(200).json({
-      list
+      list,
     });
   } catch (error) {
     console.error("Error fetching transactions:", error.message);

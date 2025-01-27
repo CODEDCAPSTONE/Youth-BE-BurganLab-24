@@ -18,7 +18,6 @@ const {
   partTimeCreateRouter,
 } = require("./routes/partTime/partTimeJobCreateRoute");
 const { jobGetRouter } = require("./routes/partTime/getParttime");
-const { budgetGetRouter } = require("./routes/budget/getBudget");
 const { budgetCreateRouter } = require("./routes/budget/bugetCreateRoute");
 const { transferRouter } = require("./routes/transfar/transfar");
 const { transferByWAMDRouter } = require("./routes/transfar/tranfarByWAMD");

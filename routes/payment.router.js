@@ -52,6 +52,7 @@ router.post("/pay", requireAuth, validateRequest, async (req, res) => {
         cardNumber: card.cardNumber,
         amount,
         remainingBalance: card.balance,
+        category,
       },
     });
   } catch (error) {
@@ -70,7 +71,7 @@ router.post("/dummy", requireAuth, validateRequest, async (req, res) => {
     }
 
     const card = await Card.findOne({ cardNumber });
-    
+
     const categories = [
       "Online shopping",
       "Restaurant",
@@ -78,7 +79,7 @@ router.post("/dummy", requireAuth, validateRequest, async (req, res) => {
       "Other",
       "Entertainment",
     ];
-    
+
     const months = ["Jan", "Feb"];
 
     for (let i = 0; i < 20; i++) {
@@ -87,7 +88,7 @@ router.post("/dummy", requireAuth, validateRequest, async (req, res) => {
         amount: Math.floor(Math.random() * 20),
         category: categories[Math.floor(Math.random() * 5)],
         date: "Jan",
-        card: card
+        card: card,
       });
     }
 
@@ -104,7 +105,7 @@ router.post("/dummy", requireAuth, validateRequest, async (req, res) => {
     //   },
     // });
     return res.status(200).json({
-      message: "Done"
+      message: "Done",
     });
   } catch (error) {
     console.error("Error processing payment:", error.message);
@@ -124,13 +125,12 @@ router.get("/dummy", requireAuth, validateRequest, async (req, res) => {
     const card = await Card.findOne({ cardNumber });
     const transactions = await Transaction.find({ card });
     return res.status(200).json({
-      transactions
+      transactions,
     });
   } catch (error) {
     console.error("Error processing payment:", error.message);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 module.exports = { cardPaymentRouter: router };
